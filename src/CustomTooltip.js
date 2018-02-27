@@ -1,5 +1,10 @@
 import React from 'react';
-import { VictoryTooltip, Line, Rect } from 'victory';
+import {
+  VictoryTooltip,
+  Line,
+  Rect,
+  VictoryLabel,
+} from 'victory';
 import CustomFlyout from './CustomFlyout';
 
 export default function (props) {
@@ -9,12 +14,12 @@ export default function (props) {
     scale,
   } = props;
 
-  const transformXShift = datum.x <= data[0].length / 2
+  const transformXShift = datum.x < data[0].length / 2
     ? 10
     : -300 - 10;
   
   const transformX = scale.x(datum.x) + transformXShift;
-  const height = 30 + (30 * data.length);
+  const height = 30 + (30 * 2);
   const graphHeight = 440;
   const transformY = (graphHeight - height) / 2;
   return (
@@ -26,7 +31,7 @@ export default function (props) {
         y2={500 - 50} // calcuated from paddings on VictoryChart
         style={{
           stroke: "rgba(0, 0, 0, .1)",
-          strokeWidth: 2
+          strokeWidth: 1
         }}
       />
       <g transform={`translate(${transformX}, ${transformY})`}>
@@ -34,11 +39,11 @@ export default function (props) {
           style={{
             fill: 'white',
             fillOpacity: .9,
-            stroke: 'gray',
+            stroke: "rgba(0, 0, 0, .1)",
             strokeWidth: 1,
           }}
           width={300}
-          height={200}
+          height={height}
         />
         <Rect
           style={{
@@ -57,32 +62,24 @@ export default function (props) {
             strokeWidth: 1,
           }}
         />
+        <VictoryLabel
+          x={10}
+          y={15}
+          style={{
+            fontSize: 14
+          }}
+          text="Oct. 16, 2017"
+        />
+        <VictoryLabel
+          x={285}
+          y={15}
+          style={{
+            fontSize: 14
+          }}
+          text="Installs"
+          textAnchor="end"
+        />
       </g>
-      {/* <foreignObject
-        dy={20}
-        x={scale.x(props.datum.x)}
-        y={10}
-        width={props.width}
-        height={props.height}
-      >
-        <div style={{
-          backgroundColor: 'white',
-          boxShadow: '0px 3px 15px rgba(0,0,0,0.2)',
-          height: 440,
-          width: 200,
-          marginLeft: -210,
-          opacity: .9,
-        }}
-        >
-          <div style={{
-            backgroundColor: 'gray',
-            borderBottom: '1px solid black',
-            padding: 5,
-          }}>Mon, May 09, 2018</div>
-          <div>
-          </div>
-        </div>
-      </foreignObject> */}
     </g >
   );
 
