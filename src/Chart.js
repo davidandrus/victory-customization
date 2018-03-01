@@ -3,6 +3,7 @@ import {
   VictoryAxis,
   VictoryChart,
   VictoryGroup,
+  VictoryLabel,
   VictoryLine,
   VictoryScatter,
   VictoryTheme,
@@ -41,7 +42,8 @@ export default function Chart(props) {
       />
       <VictoryAxis
         dependentAxis
-        label="Metric 1"
+        label="Really Long Metric Name"
+        axisLabelComponent={<CustomAxisLabel />}
         style={{
           axisLabel: {
             padding: 50

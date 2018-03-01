@@ -1,52 +1,51 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import { VictoryLabel, Line } from 'victory';
 
-export default class CustomAxisLabel extends VictoryLabel {
-  constructor(...args) {
-    super(...args);
+const LINE_HEIGHT = 30;
+const LINE_SPACING = 10;
+
+export default class CustomAxisLabel extends Component {
+  updatePositions = () => {
+    const height = this.elem.getBBox().width;
+    const yStart = this.props.y - (height / 2) - ((LINE_HEIGHT + LINE_SPACING) / 2);
+    this.line.setAttribute('y1', yStart);
+    this.line.setAttribute('y2', yStart + LINE_HEIGHT);
   }
 
-  renderElements(props) {
-    const textProps = {
-      dx: this.dx, dy: this.dy, x: this.x, y: this.y,
-      transform: this.transform, className: props.className
-    };
+  componentDidMount() {
+    this.elem = findDOMNode(this._label);
+    this.line = findDOMNode(this._line);
+
+    this.updatePositions();
+  }
+
+  componentDidUpdate() {
+    this.updatePositions();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return this.props.text !== nextProps.text;
+  }
+
+  render() {
+    const {
+      x,
+      y,
+    } = this.props;
     return (
       <g>
-        <text {...textProps}
-          {...props.events}
-        >
-          {this.props.title && <title>{this.props.title}</title>}
-          {this.props.desc && <desc>{this.props.desc}</desc>}
-          {this.content.map((line, i) => {
-            const style = this.style[i] || this.style[0];
-            const lastStyle = this.style[i - 1] || this.style[0];
-            const fontSize = (style.fontSize + lastStyle.fontSize) / 2;
-            // const lineHeight = this.checkLineHeight(
-            //   this.lineHeight,
-            //   ((this.lineHeight[i] + (this.lineHeight[i - 1] || this.lineHeight[0])) / 2),
-            //   1
-            // );
-            const lineHeight = 1;
-            const textAnchor = style.textAnchor || this.textAnchor;
-            const dy = i && !props.inline ? (lineHeight * fontSize) : undefined;
-            const x = !props.inline ? props.x : undefined;
-            return (
-              <tspan key={i} x={x} dy={dy} dx={this.dx} style={style} textAnchor={textAnchor}>
-                {line}
-              </tspan>
-            );
-          })}
-        </text>
         <Line
-          x1={14}
-          x2={14}
-          y1={0 + 10} // calculated from paddings on VictoryChart
-          y2={500 - 50} // calcuated from paddings on VictoryChart
+          ref={line => this._line = line}
+          x1={x - 6}
+          x2={x - 6}
           style={{
-            stroke: "rgba(0, 0, 0, .1)",
+            stroke: "rgb(0, 0, 0)",
             strokeWidth: 2
           }} />
+        <g transform={`translate(0, ${(LINE_HEIGHT + LINE_SPACING) / 2})`}>
+          <VictoryLabel {...this.props} ref={label => this._label = label}/>
+        </g>
       </g>
     );
   }

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Circle,
   VictoryTooltip,
   Line,
   Rect,
@@ -14,14 +15,21 @@ export default function (props) {
     scale,
   } = props;
 
+  const boxOffset = 25;
+  const headerHeight = 30;
   const transformXShift = datum.x < data[0].length / 2
-    ? 10
-    : -300 - 10;
+    ? boxOffset
+    : -300 - boxOffset;
   
   const transformX = scale.x(datum.x) + transformXShift;
-  const height = 30 + (30 * 2);
+  const height = 30 + (45 * 1 /* modifier should be dynamic */) + 10;
   const graphHeight = 440;
   const transformY = (graphHeight - height) / 2;
+  const outerPadding = 10;
+  const tooltipWidth = 300;
+  const radius = 5;
+  const dotGutter = 5;
+
   return (
     <g>
       <Line
@@ -42,28 +50,28 @@ export default function (props) {
             stroke: "rgba(0, 0, 0, .1)",
             strokeWidth: 1,
           }}
-          width={300}
+          width={tooltipWidth}
           height={height}
         />
         <Rect
           style={{
-            fill: 'yellow', // PS50
+            fill: '#efefef', // PS50
           }}
-          height={30}
-          width={300}
+          height={headerHeight}
+          width={tooltipWidth}
         />
         <Line
           x1={0}
-          x2={300}
-          y1={32}
-          y2={32}
+          x2={tooltipWidth}
+          y1={headerHeight}
+          y2={headerHeight}
           style={{
             stroke: '#ddd',
             strokeWidth: 1,
           }}
         />
         <VictoryLabel
-          x={10}
+          x={outerPadding}
           y={15}
           style={{
             fontSize: 14
@@ -71,7 +79,7 @@ export default function (props) {
           text="Oct. 16, 2017"
         />
         <VictoryLabel
-          x={285}
+          x={tooltipWidth - outerPadding}
           y={15}
           style={{
             fontSize: 14
@@ -79,6 +87,29 @@ export default function (props) {
           text="Installs"
           textAnchor="end"
         />
+        <g transform='translate(0, 45)'>
+          <g transform={`translate(0, 0)`}>
+            <Circle 
+              style={{
+                fill: 'red',
+              }}
+              r={radius}
+              cx={outerPadding + radius}
+              cy={outerPadding - radius}
+            />
+            <VictoryLabel 
+              text="sucka" 
+              x={outerPadding + (radius * 2) + dotGutter}
+              y={4}
+            />
+            <VictoryLabel 
+              text="1,500,500" 
+              x={tooltipWidth - outerPadding}
+              y={4}
+              textAnchor='end'
+            />
+          </g>
+        </g>
       </g>
     </g >
   );
