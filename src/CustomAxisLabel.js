@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { VictoryLabel, Line } from 'victory';
 
-const LINE_HEIGHT = 30;
+const LINE_HEIGHT = 36;
 const LINE_SPACING = 10;
 
 export default class CustomAxisLabel extends Component {
@@ -30,16 +30,22 @@ export default class CustomAxisLabel extends Component {
 
   render() {
     const {
+      rightAxis,
       x,
       y,
     } = this.props;
+
+    const xAdjust = rightAxis ? 8 : -5;
+    const lineStyle = rightAxis ? { strokeDasharray: '4, 4' } : {};
+
     return (
       <g>
         <Line
           ref={line => this._line = line}
-          x1={x - 6}
-          x2={x - 6}
+          x1={x + xAdjust}
+          x2={x + xAdjust}
           style={{
+            ...lineStyle,
             stroke: "rgb(0, 0, 0)",
             strokeWidth: 2
           }} />

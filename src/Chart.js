@@ -10,8 +10,6 @@ import {
   VictoryVoronoiContainer,
 } from "victory";
 
-
-
 import CustomTooltip from './CustomTooltip';
 import CustomAxisLabel from './CustomAxisLabel';
 
@@ -20,6 +18,8 @@ export default function Chart(props) {
     data,
     data2,
   } = props;
+
+  const dataArr = [data, data2];
 
   return (
     <VictoryChart
@@ -52,7 +52,8 @@ export default function Chart(props) {
       />
       <VictoryAxis
         dependentAxis
-        label="Metric 2"
+        label="Second metric here"
+        axisLabelComponent={<CustomAxisLabel rightAxis={true} />}
         orientation="right"
         style={{
           axisLabel: {
@@ -60,54 +61,34 @@ export default function Chart(props) {
           }
         }}
       />
-
-      <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
-        {data.map((item, i) => (
-          <VictoryLine
-            data={item}
-            key={i}
-            name='line'
-            style={{
-              data: {
-                strokeWidth: 2,
-              }
-            }}
-          />
-        ))}
-      </VictoryGroup>
-      <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
-        {data2.map((item, i) => (
-          <VictoryLine
-            key={i}
-            data={item}
-            name='line'
-            style={{
-              data: {
-                strokeDasharray: '4, 4',
-                strokeWidth: 2,
-              }
-            }}
-          />
-        ))}
-      </VictoryGroup>
-      <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
-        {data.map((item, i) => (
-          <VictoryScatter
-            data={item}
-            key={i}
-            size={(datum, active) => active ? 5 : 0}
-          />
-        ))}
-      </VictoryGroup>
-      <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
-        {data2.map((item, i) => (
-          <VictoryScatter
-            data={item}
-            key={i}
-            size={(datum, active) => active ? 5 : 0}
-          />
-        ))}
-      </VictoryGroup>
+      {dataArr.map((set, i) => ([
+        <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
+          {set.map((item) => {
+            return (
+              <VictoryLine
+                data={item}
+                key={i}
+                name='line'
+                style={{
+                  data: {
+                    strokeWidth: 2,
+                    ...i === 1 ? {strokeDasharray: '4, 4'} : {},
+                  }
+                }}
+              />
+            )
+          })}
+        </VictoryGroup>,
+        <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
+          {set.map((item) => (
+            <VictoryScatter
+              data={item}
+              key={i}
+              size={(datum, active) => active ? 5 : 0}
+            />
+          ))}
+        </VictoryGroup>
+      ]))}
     </VictoryChart>
   );
 }
