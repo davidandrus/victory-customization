@@ -16,7 +16,7 @@ export default function (props) {
 
   const boxOffset = 25;
   const headerHeight = 30;
-  const transformXShift = datum.x < data[0].length / 2
+  const transformXShift = datum.x < data[0][0].length / 2
     ? boxOffset
     : -300 - boxOffset;
   
@@ -93,7 +93,7 @@ export default function (props) {
         />
         <VictoryLabel
           // the 50 needs to be dynamic
-          x={tooltipWidth - outerPadding - 50}
+          x={tooltipWidth - outerPadding - 100}
           y={15}
           style={{
             fontSize: 14
@@ -111,14 +111,20 @@ export default function (props) {
               cx={outerPadding + radius}
               cy={outerPadding - radius}
             />
-            <VictoryLabel 
-              text="Totals" 
-              x={outerPadding + (radius * 2) + dotGutter}
-              y={4}
-            />
+            <foreignObject
+              x={25}
+              y={-3}
+              width={130}
+            >
+              {/* // these values can be derived from theme  */}
+              <div style={{
+                fontSize: 14, 
+                fontFamily:  "'Gill Sans', 'Gill Sans MT', 'Ser­avek', 'Trebuchet MS', sans-serif",
+              }}>Totals</div>
+            </foreignObject>
             <VictoryLabel 
               text={data[0][0][datum.x].y}
-              x={tooltipWidth - outerPadding - 50}
+              x={tooltipWidth - outerPadding - 100}
               y={4}
               textAnchor='end'
             />
