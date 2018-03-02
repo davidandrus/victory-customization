@@ -1,4 +1,5 @@
 import React from "react";
+import range from 'lodash/range';
 import {
   VictoryAxis,
   VictoryChart,
@@ -20,11 +21,23 @@ export default function Chart(props) {
   } = props;
 
   const dataArr = [data, data2];
+  const maxima = dataArr.map(set => {
+    return Math.max(...set[0].map(({ y }) => y));
+  });
+
+  const labels = ['Really Long Metric Name', 'Long Metric Name'];
+  console.log(range(0, 8))
 
   return (
     <VictoryChart
+      domain={{ y: [0, 1] }}
       height={500}
-      padding={{ top: 10, left: 70, right: 70, bottom: 50 }}
+      padding={{
+        top: 10,
+        left: 70,
+        right: 70,
+        bottom: 50,
+      }}
       width={1000}
       theme={VictoryTheme.grayscale}
       containerComponent={
@@ -39,27 +52,7 @@ export default function Chart(props) {
       }>
       <VictoryAxis
         label="Day"
-      />
-      <VictoryAxis
-        dependentAxis
-        label="Really Long Metric Name"
-        axisLabelComponent={<CustomAxisLabel />}
-        style={{
-          axisLabel: {
-            padding: 50
-          }
-        }}
-      />
-      <VictoryAxis
-        dependentAxis
-        label="Second metric here"
-        axisLabelComponent={<CustomAxisLabel rightAxis={true} />}
-        orientation="right"
-        style={{
-          axisLabel: {
-            padding: 50
-          }
-        }}
+        tickValues={range(0, 8)}
       />
       {dataArr.map((set, i) => ([
         <VictoryGroup colorScale={VictoryTheme.material.group.colorScale}>
@@ -75,6 +68,7 @@ export default function Chart(props) {
                     ...i === 1 ? {strokeDasharray: '4, 4'} : {},
                   }
                 }}
+                y={(datum) => datum.y / maxima[i]}
               />
             )
           })}
@@ -85,9 +79,25 @@ export default function Chart(props) {
               data={item}
               key={i}
               size={(datum, active) => active ? 5 : 0}
+              y={(datum) => datum.y / maxima[i]}
             />
           ))}
-        </VictoryGroup>
+        </VictoryGroup>,
+        <VictoryAxis
+          dependentAxis
+          label={labels[i]}
+          axisLabelComponent={<CustomAxisLabel rightAxis={i == 1 ? true: false} />}
+          orientation={i ===  1 ? 'right' : 'left'}
+          style={{
+            axisLabel: {
+              padding: 50
+            },
+          }}
+          // Use normalized tickValues (0 - 1)
+          tickValues={[0, 0.25, 0.5, .75, 1]}
+          // Re-scale ticks by multiplying by correct maxima
+          tickFormat={(t) => (t * maxima[i] / 1000).toFixed(1) + 'k'}
+        />
       ]))}
     </VictoryChart>
   );
