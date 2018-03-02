@@ -6,7 +6,6 @@ import {
   Rect,
   VictoryLabel,
 } from 'victory';
-import CustomFlyout from './CustomFlyout';
 
 export default function (props) {
   const {
@@ -29,6 +28,11 @@ export default function (props) {
   const tooltipWidth = 300;
   const radius = 5;
   const dotGutter = 5;
+
+  console.log({
+    data,
+    datum,
+  });
 
   return (
     <g>
@@ -87,6 +91,16 @@ export default function (props) {
           text="Installs"
           textAnchor="end"
         />
+        <VictoryLabel
+          // the 50 needs to be dynamic
+          x={tooltipWidth - outerPadding - 50}
+          y={15}
+          style={{
+            fontSize: 14
+          }}
+          text="Unique Clicks"
+          textAnchor="end"
+        />
         <g transform='translate(0, 45)'>
           <g transform={`translate(0, 0)`}>
             <Circle 
@@ -98,12 +112,18 @@ export default function (props) {
               cy={outerPadding - radius}
             />
             <VictoryLabel 
-              text="sucka" 
+              text="Totals" 
               x={outerPadding + (radius * 2) + dotGutter}
               y={4}
             />
             <VictoryLabel 
-              text="1,500,500" 
+              text={data[0][0][datum.x].y}
+              x={tooltipWidth - outerPadding - 50}
+              y={4}
+              textAnchor='end'
+            />
+            <VictoryLabel 
+              text={data[1][0][datum.x].y}
               x={tooltipWidth - outerPadding}
               y={4}
               textAnchor='end'

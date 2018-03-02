@@ -25,8 +25,7 @@ export default function Chart(props) {
     return Math.max(...set[0].map(({ y }) => y));
   });
 
-  const labels = ['Really Long Metric Name', 'Long Metric Name'];
-  console.log(range(0, 8))
+  const labels = ['Unique Clicks', 'Installs'];
 
   return (
     <VictoryChart
@@ -43,7 +42,7 @@ export default function Chart(props) {
       containerComponent={
         <VictoryVoronoiContainer
           voronoiDimension="x"
-          labelComponent={<CustomTooltip data={data} />}
+          labelComponent={<CustomTooltip data={dataArr} />}
           labels={(d) => `y: ${d.y}`}
           voronoiBlacklist={['line']}
           padding={0}
@@ -65,7 +64,7 @@ export default function Chart(props) {
                 style={{
                   data: {
                     strokeWidth: 2,
-                    ...i === 1 ? {strokeDasharray: '4, 4'} : {},
+                    ...i === 1 ? { strokeDasharray: '4, 4' } : {},
                   }
                 }}
                 y={(datum) => datum.y / maxima[i]}
